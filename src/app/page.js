@@ -1,65 +1,206 @@
-import Image from "next/image";
+/**
+ * Home Page
+ * Landing page / dashboard
+ */
 
-export default function Home() {
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useApp } from '@/contexts/AppContext';
+import Link from 'next/link';
+import { Trophy, Globe, Calendar, TrendingUp } from 'lucide-react';
+
+export default function HomePage() {
+  const { initialLoading, countries, recentMatches, upcomingMatches } = useApp();
+  const [stats, setStats] = useState({
+    totalCountries: 0,
+    totalMatches: 0,
+    upcomingMatches: 0,
+  });
+
+  useEffect(() => {
+    setStats({
+      totalCountries: countries.length,
+      totalMatches: recentMatches.length,
+      upcomingMatches: upcomingMatches.length,
+    });
+  }, [countries, recentMatches, upcomingMatches]);
+
+  if (initialLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="spinner mx-auto mb-4"></div>
+          <p className="text-dark-muted">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
+    <main className="min-h-screen p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
+            ⚽ Football Ranking System
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-xl text-dark-muted">
+            International Football Ranking & Competition Management
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="card-dark p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-dark-muted text-sm mb-1">Total Countries</p>
+                <p className="text-3xl font-bold text-primary">{stats.totalCountries}</p>
+              </div>
+              <Globe className="w-12 h-12 text-primary opacity-20" />
+            </div>
+          </div>
+
+          <div className="card-dark p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-dark-muted text-sm mb-1">Recent Matches</p>
+                <p className="text-3xl font-bold text-success">{stats.totalMatches}</p>
+              </div>
+              <TrendingUp className="w-12 h-12 text-success opacity-20" />
+            </div>
+          </div>
+
+          <div className="card-dark p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-dark-muted text-sm mb-1">Upcoming Matches</p>
+                <p className="text-3xl font-bold text-warning">{stats.upcomingMatches}</p>
+              </div>
+              <Calendar className="w-12 h-12 text-warning opacity-20" />
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+
+        {/* Navigation Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <Link href="/rankings/world" className="card-dark-hover p-6 block group">
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center mr-4">
+                <Globe className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">
+                World Rankings
+              </h3>
+            </div>
+            <p className="text-dark-muted">
+              View global FIFA rankings and country statistics
+            </p>
+          </Link>
+
+          <Link href="/rankings/confederation" className="card-dark-hover p-6 block group">
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 rounded-lg bg-success/20 flex items-center justify-center mr-4">
+                <Trophy className="w-6 h-6 text-success" />
+              </div>
+              <h3 className="text-xl font-semibold group-hover:text-success transition-colors">
+                Confederation Rankings
+              </h3>
+            </div>
+            <p className="text-dark-muted">
+              Rankings by confederation (UEFA, AFC, CAF, etc.)
+            </p>
+          </Link>
+
+          <Link href="/competitions/world" className="card-dark-hover p-6 block group">
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 rounded-lg bg-warning/20 flex items-center justify-center mr-4">
+                <Trophy className="w-6 h-6 text-warning" />
+              </div>
+              <h3 className="text-xl font-semibold group-hover:text-warning transition-colors">
+                World Competitions
+              </h3>
+            </div>
+            <p className="text-dark-muted">
+              World Cup, FIFA Confederations Cup, and more
+            </p>
+          </Link>
+
+          <Link href="/competitions/continental" className="card-dark-hover p-6 block group">
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 rounded-lg bg-info/20 flex items-center justify-center mr-4">
+                <Trophy className="w-6 h-6 text-info" />
+              </div>
+              <h3 className="text-xl font-semibold group-hover:text-info transition-colors">
+                Continental Competitions
+              </h3>
+            </div>
+            <p className="text-dark-muted">
+              Euro, Copa America, Asian Cup, and more
+            </p>
+          </Link>
+
+          <Link href="/matches" className="card-dark-hover p-6 block group">
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 rounded-lg bg-danger/20 flex items-center justify-center mr-4">
+                <Calendar className="w-6 h-6 text-danger" />
+              </div>
+              <h3 className="text-xl font-semibold group-hover:text-danger transition-colors">
+                Matches
+              </h3>
+            </div>
+            <p className="text-dark-muted">
+              View and manage international matches
+            </p>
+          </Link>
+
+          <Link href="/countries" className="card-dark-hover p-6 block group">
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center mr-4">
+                <Globe className="w-6 h-6 text-purple-500" />
+              </div>
+              <h3 className="text-xl font-semibold group-hover:text-purple-500 transition-colors">
+                Countries
+              </h3>
+            </div>
+            <p className="text-dark-muted">
+              Manage countries and national teams
+            </p>
+          </Link>
+        </div>
+
+        {/* Recent Matches Preview */}
+        {recentMatches.length > 0 && (
+          <div className="card-dark p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">Recent Matches</h2>
+              <Link href="/matches" className="text-primary hover:text-primary-light">
+                View All →
+              </Link>
+            </div>
+            <div className="space-y-4">
+              {recentMatches.slice(0, 5).map((match) => (
+                <div key={match.id} className="flex items-center justify-between py-3 border-b border-dark-border last:border-0">
+                  <div className="flex items-center space-x-4 flex-1">
+                    <span className="text-sm text-dark-muted w-32">{match.competition_name || 'Friendly'}</span>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-medium">{match.home_name}</span>
+                      <span className="text-dark-muted">vs</span>
+                      <span className="font-medium">{match.away_name}</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-xl font-bold">
+                      {match.score_home} - {match.score_away}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </main>
   );
 }
