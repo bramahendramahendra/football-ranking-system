@@ -1,26 +1,184 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Root styles - Dark mode only */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0e27;
+  --foreground: #e4e7eb;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #151a2e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2f45;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3f55;
+}
+
+/* Custom utilities */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .card-dark {
+    @apply bg-dark-card border border-dark-border rounded-lg;
+  }
+  
+  .card-dark-hover {
+    @apply card-dark hover:bg-dark-hover transition-colors duration-200;
+  }
+  
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-dark text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-dark-card hover:bg-dark-hover text-dark-text border border-dark-border font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-success {
+    @apply bg-success hover:bg-green-600 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-danger {
+    @apply bg-danger hover:bg-red-600 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+  
+  .input-dark {
+    @apply bg-dark-card border border-dark-border text-dark-text rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition-colors duration-200;
+  }
+  
+  .select-dark {
+    @apply bg-dark-card border border-dark-border text-dark-text rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition-colors duration-200 cursor-pointer;
+  }
+  
+  .badge {
+    @apply px-3 py-1 rounded-full text-sm font-medium;
+  }
+  
+  .badge-success {
+    @apply badge bg-success/20 text-success border border-success/30;
+  }
+  
+  .badge-danger {
+    @apply badge bg-danger/20 text-danger border border-danger/30;
+  }
+  
+  .badge-warning {
+    @apply badge bg-warning/20 text-warning border border-warning/30;
+  }
+  
+  .badge-info {
+    @apply badge bg-info/20 text-info border border-info/30;
+  }
+}
+
+/* Loading spinner */
+.spinner {
+  border: 3px solid rgba(59, 130, 246, 0.1);
+  border-radius: 50%;
+  border-top: 3px solid #3b82f6;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Table styles */
+.table-container {
+  @apply overflow-x-auto rounded-lg border border-dark-border;
+}
+
+.table-dark {
+  @apply w-full text-left;
+}
+
+.table-dark thead {
+  @apply bg-dark-hover border-b border-dark-border;
+}
+
+.table-dark th {
+  @apply px-6 py-4 text-sm font-semibold text-dark-text;
+}
+
+.table-dark tbody tr {
+  @apply border-b border-dark-border hover:bg-dark-hover transition-colors duration-150;
+}
+
+.table-dark tbody tr:last-child {
+  @apply border-b-0;
+}
+
+.table-dark td {
+  @apply px-6 py-4 text-sm text-dark-muted;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  @apply fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal-content {
+  @apply bg-dark-card rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-dark-border;
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Toast notifications */
+.toast-container {
+  @apply fixed top-4 right-4 z-50;
+}
+
+/* Form error message */
+.error-message {
+  @apply text-danger text-sm mt-1;
+}
+
+/* Ranking badge colors */
+.rank-1 { @apply bg-yellow-500/20 text-yellow-500 border-yellow-500/30; }
+.rank-2 { @apply bg-gray-400/20 text-gray-400 border-gray-400/30; }
+.rank-3 { @apply bg-orange-600/20 text-orange-600 border-orange-600/30; }
+
+/* Recent form indicators */
+.form-w { @apply bg-success text-white; }
+.form-d { @apply bg-warning text-white; }
+.form-l { @apply bg-danger text-white; }
